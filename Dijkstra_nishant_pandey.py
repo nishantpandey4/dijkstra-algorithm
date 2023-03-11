@@ -6,7 +6,7 @@ Project 2
 
 @author: Nishant Pandey
 UID: 119247556
-Github link of repository: https://github.com/nishantpandey4/projec2_661
+Github link of repository: https://github.com/nishantpandey4/proj2_nishant_pandey
 """
 
 #Import all packages
