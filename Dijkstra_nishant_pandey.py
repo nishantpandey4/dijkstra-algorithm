@@ -98,3 +98,21 @@ def check_collision(point,map):
         flag = True
     
     return flag
+# Getting the goal node
+
+def goal(map):
+    
+    flag = False
+    while not flag:
+        goal_node = [int(item) for item in input("\n goal node:").split(',')]#Taking input from the user 
+        goal_node[1] = 250 - goal_node[1]#converting to given frame of the map
+        if (len(goal_node) == 2 and (0 <= goal_node[0] <= 600) and (0 <= goal_node[1] <= 250)):#setting boundries
+            if not check_collision(goal_node,map):
+                flag = True
+            else:
+                print("collision with obstacle \n")
+        else:
+            print(" enter a valid goal node.\n")
+            flag = False
+        
+    return goal_node
