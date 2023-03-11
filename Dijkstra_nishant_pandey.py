@@ -131,3 +131,72 @@ def exp(node,map):
                 v_paths.append([m,cost])
 
     return v_paths
+# performs Dijkstra algorithm
+def Dijkstra_algorithm(goal_node, map):
+ 
+    flag = False #Initializing flag input 
+    while not flag:
+        start_node = [int(item) for item in input("\n start node: ").split(',')]#taking user unput for start node
+        start_node[1] = 250 - start_node[1]#converting it from open cv frame to given map frame
+
+        if (len(start_node) == 2 and (0 <= start_node[0] <= 600) and (0 <= start_node[1] <= 250)):# setting the boundries for start node
+            if not check_collision(start_node,map):#checking for collision with any obstacle
+                flag = True
+            else:   
+                print("collision with obstacle \n")
+        else:
+            print("enter a valid start node.\n")
+            flag = False
+            
+    print("\n Executing algo\n")
+
+    q = PriorityQueue()                                                              # Priority queue for open nodes
+    visited = set([])                                                                # Set conataining visited nodes
+    node_objects = {}                                                                # dictionary of nodes
+    distance = {}                                                                    # distance 
+    
+    distance = {(i, j): float('inf') for i in range(map.shape[1]) for j in range(map.shape[0])}
+
+    distance[str(start_node)] = 0                                                    # Start node has cost of 0
+    visited.add(str(start_node))                                                     # Add start node to visited list
+    node = Node.Node(start_node,0,None)                                              # Create instance of Node
+    node_objects[str(node.pos)] = node                                               # Assigning the node value in dictionary
+    q.put([node.cost, node.pos])                                                     # Inserting the start node in priority queue
+
+    while not q.empty():                                                             # Iterate until the queue is empty
+        node_temp = q.get()                                                          # Pop node from queue
+        node = node_objects[str(node_temp[1])]  
+                                     
+        # Check of the node is the goal node
+        if node_temp[1][0] == goal_node[0] and node_temp[1][1] == goal_node[1]:      
+            print(" Success\n")
+            node_objects[str(goal_node)] = Node.Node(goal_node,node_temp[0], node)
+            break
+        
+        for next_node, cost in exp(node,map):                                    # Explore neighbors
+
+            if str(next_node) in visited:                                            # Check if action performed next node is already visited
+                temp = cost + distance[str(node.pos)]                           # Cost to come
+                if temp < distance[str(next_node)]:                             # Update cost
+                    distance[str(next_node)] = temp
+                    node_objects[str(next_node)].parent = node
+
+            else:                                                                    # If next node is not visited
+                visited.add(str(next_node))
+                a_c = cost + distance[str(node.pos)]
+                distance[str(next_node)] = a_c
+                new_node = Node.Node(next_node, a_c, node_objects[str(node.pos)])
+                node_objects[str(next_node)] = new_node
+                q.put([a_c, new_node.pos])
+    # used for backtracking
+    reverse_path = []                                                                    # Empty reversed path list 
+    goal = node_objects[str(goal_node)]                                              # Get the goal from dictionary
+    reverse_path.append(goal_node)                                                       # Add the goal to reversed path list 
+    parent_node = goal.parent                                                        # Get parent of goal node
+    while parent_node:                              
+                reverse_path.append(parent_node.pos)                                             # Add coordinates of parent node
+                parent_node = parent_node.parent                                             # Update parent
+            
+    path = list(reversed(reverse_path))                                                  # Forward path 
+
+    return node_objects, path
