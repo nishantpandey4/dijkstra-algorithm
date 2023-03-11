@@ -116,3 +116,18 @@ def goal(map):
             flag = False
         
     return goal_node
+#Explores the neighbors of the current node
+def exp(node,map):
+
+    x = node.x
+    y = node.y
+    #defining action sets Actions Set = {(1,0), (-1,0), (0,1), (0,-1), (1,1), (-1,1), (1,-1), (-1,-1)} 
+    m = [(x, y + 1),(x + 1, y),(x, y -1),(x - 1, y),(x + 1, y + 1),(x + 1, y - 1),(x - 1, y - 1),(x - 1, y + 1)]
+    v_paths = []
+    for pos, m in enumerate(m):
+        if not (m[0] >= 600 or m[0] < 0 or m[1] >= 250 or m[1] < 0):
+            if map[m[1]][m[0]] == 0:
+                cost = 1.4 if pos > 3 else 1
+                v_paths.append([m,cost])
+
+    return v_paths
