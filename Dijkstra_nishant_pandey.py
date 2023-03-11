@@ -90,3 +90,11 @@ def create_map():
            if (j < 250 and j >(250 - t)):
                 map[j][i] = 1    
     return map
+# To check weather the point collides with the obstacle or not 
+def check_collision(point,map):
+    flag = False
+    
+    if map[point[1],point[0]] == 1:
+        flag = True
+    
+    return flag
