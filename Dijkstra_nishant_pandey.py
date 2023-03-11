@@ -200,3 +200,35 @@ def Dijkstra_algorithm(goal_node, map):
     path = list(reversed(reverse_path))                                                  # Forward path 
 
     return node_objects, path
+#Displaying animation 
+def Animate(node_objects, path, map):
+    
+    print(" Creating animation video...")                                              
+    fourcc = VideoWriter_fourcc(*'mp4v')
+    video = VideoWriter('./animation_video.mp4', fourcc, float(300), (600, 250)) #.mp4 format
+    
+    nodes = node_objects.values()                                                    # Get the values from dictionary(objects of class Node)
+    nodes = list(nodes)
+    img = np.dstack([map.copy() * 0, map.copy() * 0, map.copy() * 255])              # Convert binary map image to RGB
+    img = np.uint8(img)
+    video.write(img)
+    
+    
+    for i in range(len(nodes)):                                                      # Add visited nodes to video frame
+        img[nodes[i].pos[1], nodes[i].pos[0], :] = np.array([255,255,0])
+        video.write(img)
+        
+    for i in range(len(path) - 1):                                                   # Add generated path to video frame 
+        img[path[i][1], path[i][0], :] = np.array([255,0,255])
+        video.write(img)
+        
+    video.release()
+    print("Animation video saved.")
+ 
+    
+
+map = create_map()
+goal_node = goal(map)
+node_objects, path = Dijkstra_algorithm(goal_node, map)
+Animate(node_objects, path, map)
+
